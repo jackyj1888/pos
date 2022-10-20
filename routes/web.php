@@ -33,3 +33,42 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+
+
+
+
+
+
+Route::get('/saludar',function(){
+    return 'Hola mundo!!';
+});
+
+Route::get('/libros',function(){
+    $datos = ['libro uno','libro dos', 'libro tres'];
+    return $datos;
+});
+
+Route::get('/v1/libros/{id}', function($id) {
+    $datos = [
+        ['id' => 1, 'nombre' => 'Harry Potter y la piedra Filosofal'],
+        ['id' => 2, 'nombre' => 'Harry Potter y la camara secreta'],
+        ['id' => 3, 'nombre' => 'Harry Potter y el prisionero de Azcaban']
+    ];
+    $res = array_filter($datos, function($item) use($id){
+        return $item['id']== $id;
+    });
+    return $res;
+});
+
+Route::get('/v2/libros/{id}', function($id) {
+    $datos = [
+        ['id' => 1, 'nombre' => 'Harry Potter y la piedra Filosofal'],
+        ['id' => 2, 'nombre' => 'Harry Potter y la camara secreta'],
+        ['id' => 3, 'nombre' => 'Harry Potter y el prisionero de Azcaban']
+    ];
+    $nombre = array_filter($datos, function($item) use($id){
+        return $item['id']== $id;
+    });
+    return $res;
+});
