@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Http\Controllers\librosControlador;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,38 +39,21 @@ Route::middleware([
 
 
 
-
-
-
 Route::get('/saludar',function(){
     return 'Hola mundo!!';
 });
 
-Route::get('/libros',function(){
-    $datos = ['libro uno','libro dos', 'libro tres'];
-    return $datos;
-});
+/*Ejemplo llamando al controlador sin instanciarlo´
 
-Route::get('/v1/libros/{id}', function($id) {
-    $datos = [
-        ['id' => 1, 'nombre' => 'Harry Potter y la piedra Filosofal'],
-        ['id' => 2, 'nombre' => 'Harry Potter y la camara secreta'],
-        ['id' => 3, 'nombre' => 'Harry Potter y el prisionero de Azcaban']
-    ];
-    $res = array_filter($datos, function($item) use($id){
-        return $item['id']== $id;
-    });
-    return $res;
-});
+Route::get('v1/libros', [App\Http\Controllers\librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');
 
-Route::get('/v2/libros/{id}', function($id) {
-    $datos = [
-        ['id' => 1, 'nombre' => 'Harry Potter y la piedra Filosofal'],
-        ['id' => 2, 'nombre' => 'Harry Potter y la camara secreta'],
-        ['id' => 3, 'nombre' => 'Harry Potter y el prisionero de Azcaban']
-    ];
-    $nombre = array_filter($datos, function($item) use($id){
-        return $item['id']== $id;
-    });
-    return $res;
-});
+Route :: get('/v1/libros/{id}', [App\Http\Controllers\librosControlador:: class, 'codigoLibro'])  -> name('apiLibros.porCodigo');
+
+Route:: get('/v2/libros', [App\Http\Controllers\librosControlador::class, 'buscarLibro'])  -> name('apiLibros.buscar');
+*/
+
+Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');
+
+Route :: get('/v1/libros/{id}', [librosControlador:: class, 'codigoLibro'])  -> name('apiLibros.porCodigo');
+
+Route:: get('/v2/libros', [librosControlador::class, 'buscarLibro'])  -> name('apiLibros.buscar');
