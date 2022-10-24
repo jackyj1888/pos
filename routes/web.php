@@ -34,6 +34,12 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    /*Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');
+
+    Route :: get('/v1/libros/{id}', [librosControlador:: class, 'codigoLibro'])  -> name('apiLibros.porCodigo');
+
+    Route:: get('/v2/libros', [librosControlador::class, 'buscarLibro'])  -> name('apiLibros.buscar');*/
 });
 
 
