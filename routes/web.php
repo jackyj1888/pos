@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\librosControlador;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,16 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/test', function() {
+        return Inertia::render('test');
+    }); 
+
+    Route::get('/Categoria',[CategoryController::class,'index'])
+    ->name('category.index');
+
+    Route::get('/Crear',[CategoryController::class,'create'])
+    ->name('category.create');
 
     /*Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');
 
