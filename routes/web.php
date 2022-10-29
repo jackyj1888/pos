@@ -40,17 +40,19 @@ Route::middleware([
         return Inertia::render('test');
     }); 
 
-    Route::get('/Categoria',[CategoryController::class,'index'])
+    /*Route::get('/Categoria',[CategoryController::class,'index'])
     ->name('category.index');
 
     Route::get('/Crear',[CategoryController::class,'create'])
     ->name('category.create');
 
-    /*Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');
+    simplificando esos dos llamados alcontrolador (index,create)*/
 
-    Route :: get('/v1/libros/{id}', [librosControlador:: class, 'codigoLibro'])  -> name('apiLibros.porCodigo');
+    Route::resource('category',CategoryController::class);
 
-    Route:: get('/v2/libros', [librosControlador::class, 'buscarLibro'])  -> name('apiLibros.buscar');*/
+    /* ejemplo para que la ruta tenga autenticación
+    Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');*/
+
 });
 
 
