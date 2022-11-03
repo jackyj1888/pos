@@ -15,6 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
+
         $categories = Category::all();
         return Inertia::render('Category/Index',[
             'categories' => $categories
@@ -50,7 +51,10 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $categories = Category::find($id);
+        return Inertia::render('Category/Show',[
+            'datos' => $categories
+        ]);
     }
 
     /**
