@@ -16,8 +16,8 @@
                     <template #title>Categoría</template>
                     <template #description>Descripción</template>
                     <template #content>
-                        <p>{{datos.name}}</p>
-                        <p>{{datos.type}}</p>
+                        <p>Nombre:{{datos.name}}</p>
+                        <p>Tipo:{{datos.type}}</p>
                         <Link class= "m-5 bg-slate-400 hover:bg-slate-600" v-bind:href="route('category.index')" as="button"> Volver </Link> 
                     </template>
                 </ActionSection>
