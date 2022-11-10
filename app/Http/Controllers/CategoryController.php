@@ -6,6 +6,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use function PHPSTORM_META\type;
+
 class CategoryController extends Controller
 {
     /**
@@ -70,7 +72,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-       
+        $category=Category::find($id);
+        return Inertia::render('Category/Edit',[
+            'datos' => $category
+       ]);
     }
 
     /**
@@ -82,7 +87,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $updateCategory= $request->validate([
+            'name'=>'required',
+            'type'=>'required'
+        ]);
+        $category=Category::find($id);
         
+        $category->name = $updateCategory['name'];
+        $category->type = $updateCategory['type'];
+
+        $category->save();
+        
+        return redirect()->route('category.index');
     }
 
     /**

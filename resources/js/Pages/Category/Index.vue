@@ -30,6 +30,7 @@ defineProps({
                             <th> NOMBRE  </th>
                             <th> TIPO  </th>
                             <th> ACCCION  </th>
+                            <th> EDICIÓN  </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,9 @@ defineProps({
                             <td> {{datos.type}} </td>
                             <td>
                                  <Link class="m-2 px-3 bg-indigo-500 hover:bg-indigo-700 rounded" v-bind:href="route('category.show',datos.id)" as="button"> Ver </Link> 
+                            </td>
+                            <td>
+                                <Link class="m-2 px-3 bg-indigo-500 hover:bg-indigo-700 rounded" v-bind:href="route('category.edit',datos.id)" as="button"> Editar </Link> 
                             </td>
                         </tr>
                     </tbody>
