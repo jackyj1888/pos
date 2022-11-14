@@ -23,11 +23,11 @@ const form = useForm({
 
 <template>
     <AppLayoutVue>
-        <template #header> Formulario para crear Categoría </template>
+        <template #header> Formulario para Editar Categoría </template>
         <template #default>
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" >
                 <FormSection @submitted="enviar()">
-                    <template #title>Formulario de Registro</template>
+                    <template #title>Formulario de Edición</template>
                     <template #description>Descripción</template>
                     <template #form>
                         <div class="col-span-6 sm:col-span-4">
