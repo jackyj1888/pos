@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -12,9 +13,17 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->has('q'))
+        {
+            $products= Product::all()->where('name','like',"%$request->q%");
+        } else{
+            $products= Product::all();
+        }
+        return Inertia::render('Product/Index',[
+            'products' => $products
+        ]);
     }
 
     /**
@@ -24,7 +33,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Product/Create');
     }
 
     /**
@@ -35,7 +44,24 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newProduct = $request->validate([
+            'user_id' => 'required',
+            'category_id' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+        ]);
+        Product::create($newProduct);
+        /* Otra posible opci'on para codificar
+        Product::create($request->validate([
+            'user_id' => 'required',
+            'category_id' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+        ]));*/
+
+        return redirect()->route('product.index');
     }
 
     /**
@@ -46,7 +72,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return Inertia::render('Product/Show',[
+            'product' => $product
+        ]);
     }
 
     /**
@@ -57,7 +85,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return Inertia::render('Product/Edit',[
+            'product' => $product
+       ]);
     }
 
     /**
@@ -69,7 +99,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->update($request->validate([
+            'user_id' => 'required',
+            'category_id' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+        ]));
+        return redirect()->route('product.index');
     }
 
     /**
@@ -80,6 +117,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product -> delete();
+
+        return redirect()-> route('product.index');
     }
 }
