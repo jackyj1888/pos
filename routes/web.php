@@ -49,6 +49,7 @@ Route::middleware([
     simplificando esos dos llamados alcontrolador (index,create)*/
 
     Route::resource('category',CategoryController::class);
+    Route::resource('product',ProductController::class);
 
     /* ejemplo para que la ruta tenga autenticación
     Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');*/
