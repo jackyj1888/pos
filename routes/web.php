@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\librosControlador;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,10 @@ Route::middleware([
 
     Route::resource('category',CategoryController::class);
     Route::resource('product',ProductController::class);
+    /*Route::get('product', [ProductController::class,'index'])->name('product.index');
+    Route::post('product', [ProductController::class,'store'])->name('product.store');
+    Route::put('product', [ProductController::class,'update'])->name('product.update');
+    Route::delete('product', [ProductController::class,'destroy'])->name('product.destroy');*/
 
     /* ejemplo para que la ruta tenga autenticación
     Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');*/

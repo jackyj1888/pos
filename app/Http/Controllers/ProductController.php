@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,14 +16,28 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $product = null;
         if($request->has('q'))
         {
-            $products= Product::all()->where('name','like',"%$request->q%");
+            $products= Product::where('name','like',"%$request->q%")->get();
         } else{
             $products= Product::all();
         }
+        if($request->has('id') && $request->filled('id')){
+            $product = Product::find($request->id);
+            $showDialogShow= true;
+        }
+        else{
+            $product = null;
+            $showDialogShow= false;
+        }
+        $categories = Category::all(['id','name']);
         return Inertia::render('Product/Index',[
-            'products' => $products
+            'products' => $products,
+            'categories' => $categories,
+            'q' => $request->q,
+            'product' => $product,
+            'showDialogShow' => $showDialogShow,
         ]);
     }
 
@@ -31,10 +46,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return Inertia::render('Product/Create');
-    }
+   
 
     /**
      * Store a newly created resource in storage.
@@ -44,24 +56,13 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $newProduct = $request->validate([
-            'user_id' => 'required',
-            'category_id' => 'required',
-            'name' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-        ]);
-        Product::create($newProduct);
-        /* Otra posible opci'on para codificar
         Product::create($request->validate([
             'user_id' => 'required',
             'category_id' => 'required',
             'name' => 'required',
             'price' => 'required',
             'stock' => 'required',
-        ]));*/
-
-        return redirect()->route('product.index');
+        ]));
     }
 
     /**
@@ -70,12 +71,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
-    {
-        return Inertia::render('Product/Show',[
-            'product' => $product
-        ]);
-    }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -83,12 +79,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
-    {
-        return Inertia::render('Product/Edit',[
-            'product' => $product
-       ]);
-    }
+    
 
     /**
      * Update the specified resource in storage.
