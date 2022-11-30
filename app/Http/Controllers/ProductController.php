@@ -23,13 +23,19 @@ class ProductController extends Controller
         } else{
             $products= Product::all();
         }
-        if($request->has('id') && $request->filled('id')){
-            $product = Product::find($request->id);
+        if($request->has('show') && $request->filled('show')){
+            $product = Product::find($request->show);
             $showDialogShow= true;
         }
         else{
-            $product = null;
             $showDialogShow= false;
+        }
+        if($request->has('edit') && $request->filled('edit')){
+            $product = Product::find($request->edit);
+            $showDialogForm= true;
+        }
+        else{
+            $showDialogForm= false;
         }
         $categories = Category::all(['id','name']);
         return Inertia::render('Product/Index',[
@@ -38,6 +44,7 @@ class ProductController extends Controller
             'q' => $request->q,
             'product' => $product,
             'showDialogShow' => $showDialogShow,
+            'showDialogForm' => $showDialogForm,
         ]);
     }
 
@@ -97,7 +104,6 @@ class ProductController extends Controller
             'price' => 'required',
             'stock' => 'required',
         ]));
-        return redirect()->route('product.index');
     }
 
     /**

@@ -17,23 +17,24 @@ const data = defineProps({
     user: Object,
     q: String,
     category:Object,
-    showDialogShow: Boolean,
     product : Object,
+    showDialogShow: Boolean,
+    showDialogForm : Boolean
 });
 
-//const showDialogShow = ref(false);
-const showDialogCreate = ref(false);
-const showDialogUpdate = ref(false);
+//const showDialogShow = ref(false);  
+//const showDialogCreate = ref(false);
+//const showDialogUpdate = ref(false);
 const showDialogDelete = ref(false);
 
-const enviarCrear = ()=>{
-    formCreate.post(route('product.store'), {
-        onSuccess :() => {
-            showDialogCreate.value=false;
-            formCreate.reset();
-    }});
-    /*console.log('hola');*/
-}
+const form = useForm({
+    user_id : data.user.id,
+    category_id :data.product?.category_id ?? '',
+    name:data.product?.name ?? '',
+    price:data.product?.price ?? '',
+    stock:data.product?.stock ?? '',
+});
+
 const enviarEditar = ()=>{
     console.log('hola');
 }
@@ -41,23 +42,36 @@ const enviarEliminar = ()=>{
     console.log('hola');
 }
 
-const formCreate = useForm({
-    user_id : data.user.id,
-    category_id :'',
-    name:'',
-    price:'',
-    stock:'',
-});
-const cancelarCrear = () => {
-    showDialogCreate.value=false;
-    formCreate.reset();
+const enviarForm = ()=>{
+
+    if(data.product){
+        form.put(route('product.update',data.product.id),{
+            onSuccess :() => {
+                Inertia.visit(route('product.index'));
+            }
+        });
+    }else{
+        form.post(route('product.store'), {
+        onSuccess :() => {
+            data.showDialogForm = false;
+            form.reset();
+    }});
+    }
+    
+    /*console.log('hola');*/
+}
+
+
+const cancelarForm = () => {
+    data.showDialogForm = false;
+    Inertia.visit(route('product.index'));
 }
 const enviarBuscar = () => {
     Inertia.visit(route('product.index', {q : data.q}));
 }
 const enviarMostrar = (id) => {
 
-    Inertia.visit(route('product.index', {id : id}, {
+    Inertia.visit(route('product.index', {show : id}, {
         onSuccess : () => {
             showDialogShow.value = true;
         }
@@ -67,12 +81,16 @@ const cancelarMostrar = () => {
     Inertia.visit(route('product.index'));
 }
 
+const mostrarEditar = (id) => {
+    Inertia.visit(route('product.index', {edit : id}));
+}
+
 </script>
 <template >
     <AppLayoutVue>
         <template #header>
             Página Producto
-            <SecondaryButton class="m-2 px-3 bg-indigo-500 hover:bg-indigo-700 rounded"  as="button" @click="showDialogCreate=true"> Nuevo </SecondaryButton>
+            <SecondaryButton class="m-2 px-3 bg-indigo-500 hover:bg-indigo-700 rounded"  as="button" @click="showDialogForm=true"> Nuevo </SecondaryButton>
         </template>
         
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" >
@@ -102,7 +120,7 @@ const cancelarMostrar = () => {
                                     Ver </SecondaryButton> 
                             </td>
                             <td>
-                                <SecondaryButton class="m-2 px-3 bg-orange-500 hover:bg-orange-700 rounded" @click="showDialogUpdate=true"> 
+                                <SecondaryButton class="m-2 px-3 bg-orange-500 hover:bg-orange-700 rounded" @click="mostrarEditar(datos.id)"> 
                                     Editar </SecondaryButton> 
                             </td>
                             <td>
@@ -119,59 +137,53 @@ const cancelarMostrar = () => {
     <DialogModal v-bind:show="showDialogShow">
         <template #title>Mostrar Producto</template>
         <template #content>
-            <p>Nombre: {{product.name}}</p>
-            <p>Precio: {{product.price}}</p>
-            <p>Cantidad: {{product.stock}}</p>
+            <p>Nombre: {{product?.name ?? ''}}</p>
+            <p>Precio: {{product?.price ?? ''}}</p>
+            <p>Cantidad: {{product?.stock ?? ''}}</p>
         </template>
         <template #footer>
             <SecondaryButton @click="cancelarMostrar">Cancelar</SecondaryButton>
         </template>
     </DialogModal>
-    <DialogModal v-bind:show="showDialogCreate">
-        <template #title>Nuevo Producto</template>
+    <DialogModal v-bind:show="showDialogForm">
+        <template #title>{{ product ? 'Editar Producto' : 'Nuevo Producto'}}</template>
         <template #content>
-          <form @submit.prevent="enviarCrear()"> 
+          <form @submit.prevent="enviarForm()"> 
             <div class="grid grid-cols-6 gap-6"> 
                     
                     <div class="col-span-6 sm:col-span-4 ">
                         <InputLabel for="category" value="Categoria"/>
                         <select name="category" id="category" class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" 
-                         v-model="formCreate.category_id">
+                         v-model="form.category_id">
                             <option v-for="category in categories" v-bind:value="category.id">{{category.name}}</option>
                         </select>
-                        <InputError v-bind:message="formCreate.errors.category_id"></InputError>
+                        <InputError v-bind:message="form.errors.category_id"></InputError>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="name">Nombre</InputLabel>
-                        <TextInput type="text" name="name" id="name"  class="w-full" v-model="formCreate.name" ></TextInput>
-                        <InputError v-bind:message="formCreate.errors.name"></InputError>
+                        <TextInput type="text" name="name" id="name"  class="w-full" v-model="form.name" ></TextInput>
+                        <InputError v-bind:message="form.errors.name"></InputError>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="price" value="Precio"/>
-                        <TextInput type="number" name="price" id="price"  class="w-full" v-model="formCreate.price" ></TextInput>
-                        <InputError v-bind:message="formCreate.errors.price"></InputError>
+                        <TextInput type="number" name="price" id="price"  class="w-full" v-model="form.price" ></TextInput>
+                        <InputError v-bind:message="form.errors.price"></InputError>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="stock" value="Stock"/>
-                        <TextInput type="number" name="stock" id="stock"  class="w-full" v-model="formCreate.stock"></TextInput>
-                        <InputError v-bind:message="formCreate.errors.stock"></InputError>
+                        <TextInput type="number" name="stock" id="stock"  class="w-full" v-model="form.stock"></TextInput>
+                        <InputError v-bind:message="form.errors.stock"></InputError>
                     </div>
                 </div>
                 <div class="col-span-6 text-end">
-                    <PrimaryButton class="mr-2">Guardar</PrimaryButton>
-                    <SecondaryButton @click="cancelarCrear">Cancelar</SecondaryButton>
+                    <PrimaryButton class="mr-2">{{ product ? 'Editar' : 'Guardar'}}</PrimaryButton>
+                    <SecondaryButton @click="cancelarForm">Cancelar</SecondaryButton>
                 </div>
             </form>     
         </template>
        
     </DialogModal>
-    <DialogModal v-bind:show="showDialogUpdate">
-        <template #title>Editar Producto</template>
-        <template #content>Formulario</template>
-        <template #footer>
-            <SecondaryButton @click="showDialogUpdate=false">Cancelar</SecondaryButton>
-        </template>
-    </DialogModal>
+    
     <DialogModal v-bind:show="showDialogDelete">
         <template #title>Eliminar Producto</template>
         <template #content>Formulario</template>
