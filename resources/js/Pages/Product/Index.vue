@@ -25,7 +25,7 @@ const data = defineProps({
 //const showDialogShow = ref(false);  
 //const showDialogCreate = ref(false);
 //const showDialogUpdate = ref(false);
-const showDialogDelete = ref(false);
+const showDialogDelete = ref(0);
 
 const form = useForm({
     user_id : data.user.id,
@@ -35,11 +35,13 @@ const form = useForm({
     stock:data.product?.stock ?? '',
 });
 
-const enviarEditar = ()=>{
-    console.log('hola');
-}
-const enviarEliminar = ()=>{
-    console.log('hola');
+
+const enviarEliminar = (id)=>{
+    useForm().delete(route('product.destroy', showDialogDelete.value), 
+    {onSuccess : ()=> {
+        showDialogDelete.value=0;
+    }
+    });
 }
 
 const enviarForm = ()=>{
@@ -124,7 +126,7 @@ const mostrarEditar = (id) => {
                                     Editar </SecondaryButton> 
                             </td>
                             <td>
-                                <SecondaryButton class="m-2 px-3 bg-red-500 hover:bg-red-700 rounded" @click="showDialogDelete=true"> 
+                                <SecondaryButton class="m-2 px-3 bg-red-500 hover:bg-red-700 rounded" @click="showDialogDelete=datos.id"> 
                                     Eliminar </SecondaryButton> 
                             </td>
                         </tr>
@@ -151,6 +153,11 @@ const mostrarEditar = (id) => {
           <form @submit.prevent="enviarForm()"> 
             <div class="grid grid-cols-6 gap-6"> 
                     
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="name">Nombre</InputLabel>
+                        <TextInput type="text" name="name" id="name"  class="w-full" v-model="form.name" ></TextInput>
+                        <InputError v-bind:message="form.errors.name"></InputError>
+                    </div>
                     <div class="col-span-6 sm:col-span-4 ">
                         <InputLabel for="category" value="Categoria"/>
                         <select name="category" id="category" class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" 
@@ -158,11 +165,6 @@ const mostrarEditar = (id) => {
                             <option v-for="category in categories" v-bind:value="category.id">{{category.name}}</option>
                         </select>
                         <InputError v-bind:message="form.errors.category_id"></InputError>
-                    </div>
-                    <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="name">Nombre</InputLabel>
-                        <TextInput type="text" name="name" id="name"  class="w-full" v-model="form.name" ></TextInput>
-                        <InputError v-bind:message="form.errors.name"></InputError>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="price" value="Precio"/>
@@ -184,11 +186,16 @@ const mostrarEditar = (id) => {
        
     </DialogModal>
     
-    <DialogModal v-bind:show="showDialogDelete">
+    <DialogModal v-bind:show="showDialogDelete > 0">
         <template #title>Eliminar Producto</template>
-        <template #content>Formulario</template>
+        <template #content>
+            <p>Seguro de Eliminar el producto " 
+                <span>{{products.find(product=> product.id == showDialogDelete)?.name ?? ''}}</span>
+            "?</p>
+        </template>
         <template #footer>
-            <SecondaryButton @click="showDialogDelete=false">Cancelar</SecondaryButton>
+            <PrimaryButton type="button" @click="enviarEliminar">Si</PrimaryButton>
+            <SecondaryButton @click="showDialogDelete=false">No</SecondaryButton>
         </template>
     </DialogModal>
 </template>
