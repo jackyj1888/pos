@@ -15,4 +15,8 @@ class Client extends Model
         'birth_date',
         'nit',
     ];
+    public function Sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }
