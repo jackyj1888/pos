@@ -19,9 +19,18 @@ class Product extends Model
     ] ;
 
 
-public function category()
+public function Category()
 {
     return $this->belongsTo(Category::class);
 }
 
+public function Details()
+{
+    return $this->hasMany(Detail::class);
+}
+
+public function Sales()
+    {
+        return $this->belongsToMany(Sale::class,'details');
+    }
 }
