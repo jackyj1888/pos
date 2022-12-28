@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\librosControlador;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,10 @@ Route::middleware([
     Route::put('product', [ProductController::class,'update'])->name('product.update');
     Route::delete('product', [ProductController::class,'destroy'])->name('product.destroy');
 
+    Route::get('sale', [SaleController::class,'index'])->name('sale.index');
+    //Route::post('sale', [SaleController::class,'store'])->name('sale.store');
+    //Route::put('sale', [SaleController::class,'update'])->name('sale.update');
+    //Route::delete('sale', [SaleController::class,'destroy'])->name('sale.destroy');
     /* ejemplo para que la ruta tenga autenticación
     Route::get('v1/libros', [librosControlador::class, 'listarLibros']) -> name('apiLibros.listar');*/
 
