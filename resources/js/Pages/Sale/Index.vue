@@ -6,7 +6,7 @@ import ActionSection from '@/Components/ActionSection.vue';
 <template>
     <AppLayoutVue>
         <template #header>
-            ventas
+            VENTAS
         </template>
         
         
