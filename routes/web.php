@@ -8,7 +8,7 @@ use App\Http\Controllers\librosControlador;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
-
+use App\Http\Controllers\ClientController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,6 +58,9 @@ Route::middleware([
     Route::delete('product', [ProductController::class,'destroy'])->name('product.destroy');
 
     Route::get('sale', [SaleController::class,'index'])->name('sale.index');
+
+    Route::post('client', [ClientController::class,'store'])->name('client.store');
+
     //Route::post('sale', [SaleController::class,'store'])->name('sale.store');
     //Route::put('sale', [SaleController::class,'update'])->name('sale.update');
     //Route::delete('sale', [SaleController::class,'destroy'])->name('sale.destroy');
